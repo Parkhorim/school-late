@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+body {
+  font-family: -apple-system, "Malgun Gothic", "Apple SD Gothic Neo", Arial,
+    Helvetica, sans-serif;
+}

@@ -1,0 +1,40 @@
+// 지각 기록 앱 데이터 모델
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Student {
+  id            Int      @id @default(autoincrement())
+  studentNumber Int      @unique // 학번 (예: 2101 = 2학년 1반 1번)
+  name          String
+  grade         Int // 학년
+  classNo       Int // 반
+  numberInClass Int // 번호
+  gender        String? // "남" | "여"
+  active        Boolean  @default(true) // 전학 등으로 비활성화된 학생 제외용
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tardyRecords TardyRecord[]
+
+  @@index([grade, classNo])
+}
+
+model TardyRecord {
+  id         Int      @id @default(autoincrement())
+  studentId  Int
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  occurredAt DateTime // 지각이 발생한 날짜/시각
+  note       String? // 사유 (선택)
+  recordedBy String? // 입력한 선생님 성함 (선택)
+  recordedAt DateTime @default(now()) // 시스템에 입력된 시각 (수정 불가, 감사용)
+
+  @@index([occurredAt])
+  @@index([studentId])
+}
