@@ -8,6 +8,9 @@ export type ParsedStudent = {
 
 type HeaderMarker = { idCol: number; nameCol: number; genderCol: number };
 
+// 반복되는 보조 표 헤더가 학생 데이터로 잘못 인식되는 것을 막기 위한 방어용 블랙리스트
+const HEADER_LABELS = new Set(["이름", "성명", "성별", "학번", "번호", "구학번", "신학번"]);
+
 /**
  * 학교 학생 명렬 엑셀(반별 블록이 가로로 나열된 형식)을 파싱한다.
  * 헤더가 "학번" 단일 셀이거나, "2025"(구학번) 다음에 "2026"(신학번=학번)이 오는
@@ -37,7 +40,7 @@ export function parseRosterWorkbook(buffer: ArrayBuffer | Buffer): ParsedStudent
           const nameVal = row[marker.nameCol];
           const studentNumber = toValidStudentNumber(idVal);
           const name = typeof nameVal === "string" ? nameVal.trim() : "";
-          if (studentNumber === null || !name) continue;
+          if (studentNumber === null || !name || HEADER_LABELS.has(name)) continue;
 
           const genderRaw = row[marker.genderCol];
           const gender =
@@ -70,6 +73,11 @@ function toValidStudentNumber(val: unknown): number | null {
   const n = typeof val === "number" ? val : Number(val);
   if (!Number.isInteger(n)) return null;
   if (n < 1000 || n > 9999) return null;
+  // 학번은 학년(1자리)+반(1자리, 0 불가)+번호(2자리, 0 불가)로 구성됨.
+  // 반복되는 보조 표 헤더(예: "2025 2026 이름 성별")가 데이터처럼 잘못 인식되는 것을 막는다.
+  const classNo = Math.floor((n % 1000) / 100);
+  const numberInClass = n % 100;
+  if (classNo < 1 || numberInClass < 1) return null;
   return n;
 }
 

@@ -30,6 +30,7 @@ export default function EntryPage() {
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [recent, setRecent] = useState<TardyRecord[]>([]);
+  const [confirmingId, setConfirmingId] = useState<number | null>(null);
   const numberInputRef = useRef<HTMLInputElement>(null);
 
   const loadRecent = useCallback(async () => {
@@ -41,6 +42,7 @@ export default function EntryPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 최초 진입 시 최근 기록을 불러오고 주기적으로 갱신
     loadRecent();
     const interval = setInterval(loadRecent, 8000);
     return () => clearInterval(interval);
@@ -99,7 +101,11 @@ export default function EntryPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("이 기록을 삭제할까요?")) return;
+    if (confirmingId !== id) {
+      setConfirmingId(id);
+      return;
+    }
+    setConfirmingId(null);
     await fetch(`/api/tardy/${id}`, { method: "DELETE" });
     loadRecent();
   }
@@ -202,12 +208,29 @@ export default function EntryPage() {
                   <span className="text-gray-300 ml-2">· {r.recordedBy}</span>
                 )}
               </div>
-              <button
-                onClick={() => handleDelete(r.id)}
-                className="text-gray-400 hover:text-red-600 px-2"
-              >
-                삭제
-              </button>
+              {confirmingId === r.id ? (
+                <span className="flex items-center gap-1">
+                  <button
+                    onClick={() => handleDelete(r.id)}
+                    className="text-red-600 font-medium px-2"
+                  >
+                    정말 삭제
+                  </button>
+                  <button
+                    onClick={() => setConfirmingId(null)}
+                    className="text-gray-400 px-2"
+                  >
+                    취소
+                  </button>
+                </span>
+              ) : (
+                <button
+                  onClick={() => handleDelete(r.id)}
+                  className="text-gray-400 hover:text-red-600 px-2"
+                >
+                  삭제
+                </button>
+              )}
             </li>
           ))}
         </ul>

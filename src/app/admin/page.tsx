@@ -31,6 +31,7 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 최초 진입 시 학생 목록을 불러옴
     loadStudents("");
   }, [loadStudents]);
 

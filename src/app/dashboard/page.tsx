@@ -62,6 +62,7 @@ export default function DashboardPage() {
   }, [period, date, grade]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 기간/학년 필터가 바뀔 때마다 통계를 다시 불러옴
     load();
   }, [load]);
 
