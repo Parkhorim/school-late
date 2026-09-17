@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { ChartBarIcon, LockIcon, UsersIcon } from "@/components/icons";
 
 type Period = "daily" | "weekly" | "monthly" | "semester" | "yearly";
 
@@ -26,14 +27,16 @@ type StatsResponse = {
   totalCount: number;
   byClass: { grade: number; classNo: number; count: number }[];
   byBucket: { bucket: string; count: number }[];
-  topStudents: {
-    studentId: number;
-    name: string;
-    grade: number;
-    classNo: number;
-    numberInClass: number;
-    count: number;
-  }[];
+  topStudents:
+    | {
+        studentId: number;
+        name: string;
+        grade: number;
+        classNo: number;
+        numberInClass: number;
+        count: number;
+      }[]
+    | null;
 };
 
 function todayKST() {
@@ -79,17 +82,17 @@ export default function DashboardPage() {
     })) ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
-      <section className="bg-white rounded-xl shadow p-5">
+    <div className="mx-auto max-w-4xl px-4 py-8 space-y-6">
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
         <div className="flex flex-wrap gap-2 mb-4">
           {PERIODS.map((p) => (
             <button
               key={p.value}
               onClick={() => setPeriod(p.value)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium ${
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 period === p.value
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200"
               }`}
             >
               {p.label}
@@ -102,11 +105,11 @@ export default function DashboardPage() {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="border rounded-md px-3 py-2 text-sm"
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
           />
           <button
             onClick={() => setDate(todayKST())}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-blue-600 hover:underline font-medium"
           >
             오늘
           </button>
@@ -114,7 +117,7 @@ export default function DashboardPage() {
           <select
             value={grade}
             onChange={(e) => setGrade(e.target.value)}
-            className="border rounded-md px-3 py-2 text-sm ml-auto"
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm ml-auto outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
           >
             <option value="all">전체 학년</option>
             <option value="1">1학년</option>
@@ -123,65 +126,99 @@ export default function DashboardPage() {
           </select>
         </div>
 
-        <div className="mt-4 flex items-baseline gap-3">
-          <h2 className="text-lg font-bold">{stats?.label ?? "-"}</h2>
-          <span className="text-3xl font-extrabold text-blue-700">
+        <div className="mt-5 flex items-baseline gap-3">
+          <h2 className="text-lg font-bold text-slate-900">{stats?.label ?? "-"}</h2>
+          <span className="text-3xl font-extrabold text-blue-600 tabular-nums">
             {stats?.totalCount ?? 0}
           </span>
-          <span className="text-gray-400">건</span>
-          {loading && <span className="text-xs text-gray-400">불러오는 중...</span>}
+          <span className="text-slate-400 text-sm">건</span>
+          {loading && <span className="text-xs text-slate-400">불러오는 중...</span>}
         </div>
       </section>
 
-      <section className="bg-white rounded-xl shadow p-5">
-        <h3 className="font-bold mb-3">반별 지각 건수</h3>
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <ChartBarIcon className="w-4.5 h-4.5" />
+          </div>
+          <h3 className="font-bold text-slate-900">반별 지각 건수</h3>
+        </div>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={classChartData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" fontSize={12} />
-              <YAxis allowDecimals={false} fontSize={12} />
-              <Tooltip />
-              <Bar dataKey="건수" fill="#2563eb" radius={[4, 4, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EEF1F6" />
+              <XAxis dataKey="name" fontSize={12} stroke="#94A3B8" tickLine={false} axisLine={false} />
+              <YAxis allowDecimals={false} fontSize={12} stroke="#94A3B8" tickLine={false} axisLine={false} />
+              <Tooltip cursor={{ fill: "#F1F5F9" }} contentStyle={{ borderRadius: 10, border: "1px solid #E2E8F0" }} />
+              <Bar dataKey="건수" fill="#2563eb" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </section>
 
-      <section className="bg-white rounded-xl shadow p-5">
-        <h3 className="font-bold mb-3">기간 추이</h3>
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <ChartBarIcon className="w-4.5 h-4.5" />
+          </div>
+          <h3 className="font-bold text-slate-900">기간 추이</h3>
+        </div>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={bucketChartData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" fontSize={11} />
-              <YAxis allowDecimals={false} fontSize={12} />
-              <Tooltip />
-              <Bar dataKey="건수" fill="#16a34a" radius={[4, 4, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EEF1F6" />
+              <XAxis dataKey="name" fontSize={11} stroke="#94A3B8" tickLine={false} axisLine={false} />
+              <YAxis allowDecimals={false} fontSize={12} stroke="#94A3B8" tickLine={false} axisLine={false} />
+              <Tooltip cursor={{ fill: "#F1F5F9" }} contentStyle={{ borderRadius: 10, border: "1px solid #E2E8F0" }} />
+              <Bar dataKey="건수" fill="#16a34a" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </section>
 
-      <section className="bg-white rounded-xl shadow p-5">
-        <h3 className="font-bold mb-3">지각 많은 학생 Top 10</h3>
-        {stats && stats.topStudents.length === 0 && (
-          <p className="text-sm text-gray-400">해당 기간 기록이 없습니다.</p>
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <UsersIcon className="w-4.5 h-4.5" />
+          </div>
+          <h3 className="font-bold text-slate-900">지각 많은 학생 Top 10</h3>
+        </div>
+
+        {stats?.topStudents === null && (
+          <div className="flex flex-col items-center gap-2 text-slate-400 py-8 text-center">
+            <LockIcon className="w-7 h-7" />
+            <p className="text-sm">
+              개인정보 보호를 위해 로그인한 선생님만 볼 수 있습니다.
+            </p>
+          </div>
         )}
-        <ul className="divide-y">
-          {stats?.topStudents.map((s, i) => (
-            <li
-              key={s.studentId}
-              className="py-2 flex items-center justify-between text-sm"
-            >
-              <span>
-                <span className="text-gray-400 mr-2">{i + 1}</span>
-                {s.grade}학년 {s.classNo}반 {s.numberInClass}번 {s.name}
-              </span>
-              <span className="font-bold text-blue-700">{s.count}회</span>
-            </li>
-          ))}
-        </ul>
+        {stats?.topStudents?.length === 0 && (
+          <p className="text-sm text-slate-400 py-4">해당 기간 기록이 없습니다.</p>
+        )}
+        {stats?.topStudents && stats.topStudents.length > 0 && (
+          <ul className="divide-y divide-slate-100">
+            {stats.topStudents.map((s, i) => (
+              <li
+                key={s.studentId}
+                className="py-2.5 flex items-center justify-between text-sm"
+              >
+                <span className="flex items-center gap-2.5">
+                  <span
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                      i < 3 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-400"
+                    }`}
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="text-slate-800">
+                    {s.grade}학년 {s.classNo}반 {s.numberInClass}번 {s.name}
+                  </span>
+                </span>
+                <span className="font-bold text-blue-600 tabular-nums">{s.count}회</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

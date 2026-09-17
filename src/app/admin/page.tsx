@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { SearchIcon, UploadIcon, UsersIcon } from "@/components/icons";
 
 type Student = {
   id: number;
@@ -70,67 +71,100 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 space-y-6">
-      <section className="bg-white rounded-xl shadow p-5">
-        <h2 className="font-bold text-lg mb-2">학생 명단 업로드</h2>
-        <p className="text-sm text-gray-500 mb-3">
+    <div className="mx-auto max-w-3xl px-4 py-8 space-y-6">
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <UploadIcon className="w-4.5 h-4.5" />
+          </div>
+          <h2 className="font-bold text-lg text-slate-900">학생 명단 업로드</h2>
+        </div>
+        <p className="text-sm text-slate-500 mb-4">
           학교 학생 명렬 엑셀 파일(.xlsx)을 업로드하면 학번을 기준으로 자동
           등록/갱신됩니다. 반별로 여러 번 나눠 올려도 되고, 전체 파일을 한 번에
           올려도 됩니다.
         </p>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".xlsx,.xls"
-          onChange={handleUpload}
-          disabled={uploading}
-          className="block w-full text-sm border rounded-md p-2"
-        />
-        {uploading && <p className="text-sm text-gray-500 mt-2">업로드 중...</p>}
-        {uploadMsg && <p className="text-sm text-green-700 mt-2">{uploadMsg}</p>}
-        {uploadError && <p className="text-sm text-red-600 mt-2">{uploadError}</p>}
+        <label className="flex items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl p-5 text-sm text-slate-500 cursor-pointer hover:border-blue-300 hover:bg-blue-50/40 transition-colors">
+          <UploadIcon className="w-4 h-4" />
+          <span>{uploading ? "업로드 중..." : "엑셀 파일 선택 또는 끌어놓기"}</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={handleUpload}
+            disabled={uploading}
+            className="hidden"
+          />
+        </label>
+        {uploadMsg && (
+          <p className="text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2 mt-3">
+            {uploadMsg}
+          </p>
+        )}
+        {uploadError && (
+          <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mt-3">
+            {uploadError}
+          </p>
+        )}
       </section>
 
-      <section className="bg-white rounded-xl shadow p-5">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-lg">학생 목록 ({students.length}명)</h2>
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+            <UsersIcon className="w-4.5 h-4.5" />
+          </div>
+          <h2 className="font-bold text-lg text-slate-900">학생 목록 ({students.length}명)</h2>
         </div>
-        <input
-          type="text"
-          placeholder="학번 또는 이름 검색"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            loadStudents(e.target.value);
-          }}
-          className="w-full border rounded-md px-3 py-2 mb-3"
-        />
-        <div className="overflow-x-auto max-h-[60vh] overflow-y-auto">
+        <div className="relative mb-4">
+          <SearchIcon className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="학번 또는 이름 검색"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              loadStudents(e.target.value);
+            }}
+            className="w-full border border-slate-200 rounded-xl pl-9 pr-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
+          />
+        </div>
+        <div className="overflow-x-auto max-h-[60vh] overflow-y-auto rounded-xl border border-slate-100">
           <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-white">
-              <tr className="text-left text-gray-500 border-b">
-                <th className="py-2 pr-2">학번</th>
-                <th className="py-2 pr-2">이름</th>
-                <th className="py-2 pr-2">학년/반/번호</th>
-                <th className="py-2 pr-2">성별</th>
-                <th className="py-2 pr-2">상태</th>
-                <th className="py-2"></th>
+            <thead className="sticky top-0 bg-slate-50">
+              <tr className="text-left text-slate-400 text-xs uppercase tracking-wide">
+                <th className="py-2.5 px-3">학번</th>
+                <th className="py-2.5 px-3">이름</th>
+                <th className="py-2.5 px-3">학년/반/번호</th>
+                <th className="py-2.5 px-3">성별</th>
+                <th className="py-2.5 px-3">상태</th>
+                <th className="py-2.5 px-3"></th>
               </tr>
             </thead>
             <tbody>
-              {students.map((s) => (
-                <tr key={s.id} className={`border-b ${!s.active ? "text-gray-300" : ""}`}>
-                  <td className="py-1.5 pr-2">{s.studentNumber}</td>
-                  <td className="py-1.5 pr-2">{s.name}</td>
-                  <td className="py-1.5 pr-2">
+              {students.map((s, i) => (
+                <tr
+                  key={s.id}
+                  className={`border-t border-slate-100 ${i % 2 === 1 ? "bg-slate-50/50" : ""} ${!s.active ? "text-slate-300" : "text-slate-700"}`}
+                >
+                  <td className="py-2 px-3 tabular-nums">{s.studentNumber}</td>
+                  <td className="py-2 px-3 font-medium">{s.name}</td>
+                  <td className="py-2 px-3 tabular-nums">
                     {s.grade}-{s.classNo}-{s.numberInClass}
                   </td>
-                  <td className="py-1.5 pr-2">{s.gender ?? "-"}</td>
-                  <td className="py-1.5 pr-2">{s.active ? "재학" : "비활성"}</td>
-                  <td className="py-1.5">
+                  <td className="py-2 px-3">{s.gender ?? "-"}</td>
+                  <td className="py-2 px-3">
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                        s.active ? "bg-green-50 text-green-700" : "bg-slate-100 text-slate-400"
+                      }`}
+                    >
+                      {s.active ? "재학" : "비활성"}
+                    </span>
+                  </td>
+                  <td className="py-2 px-3">
                     <button
                       onClick={() => toggleActive(s)}
-                      className="text-blue-600 hover:underline text-xs"
+                      className="text-blue-600 hover:underline text-xs font-medium"
                     >
                       {s.active ? "비활성화" : "재활성화"}
                     </button>

@@ -2,6 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toKSTLocalInputValue } from "@/lib/period";
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  GraduationCapIcon,
+  InboxIcon,
+  SearchIcon,
+} from "@/components/icons";
 
 type Student = {
   id: number;
@@ -111,9 +118,15 @@ export default function EntryPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 space-y-6">
-      <section className="bg-white rounded-xl shadow p-5">
-        <h2 className="font-bold text-lg mb-3">학생 지각 기록</h2>
+    <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <SearchIcon className="w-4.5 h-4.5" />
+          </div>
+          <h2 className="font-bold text-lg text-slate-900">학생 지각 기록</h2>
+        </div>
+
         <form onSubmit={handleLookup} className="flex gap-2">
           <input
             ref={numberInputRef}
@@ -123,57 +136,71 @@ export default function EntryPage() {
             value={numberInput}
             onChange={(e) => setNumberInput(e.target.value)}
             autoFocus
-            className="flex-1 border rounded-md px-3 py-3 text-lg"
+            className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-lg outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-5 rounded-md font-medium"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 rounded-xl font-medium transition-colors"
           >
             조회
           </button>
         </form>
 
-        {lookupError && <p className="text-red-600 text-sm mt-2">{lookupError}</p>}
+        {lookupError && (
+          <p className="text-red-600 bg-red-50 rounded-lg px-3 py-2 text-sm mt-3">
+            {lookupError}
+          </p>
+        )}
         {successMsg && (
-          <p className="text-green-700 bg-green-50 rounded-md px-3 py-2 text-sm mt-3">
+          <p className="flex items-center gap-2 text-green-700 bg-green-50 rounded-lg px-3 py-2.5 text-sm mt-3">
+            <CheckCircleIcon className="w-4 h-4 flex-shrink-0" />
             {successMsg}
           </p>
         )}
 
         {student && (
-          <div className="mt-4 border rounded-lg p-4 bg-blue-50">
-            <div className="text-xl font-bold">
-              {student.grade}학년 {student.classNo}반 {student.numberInClass}번{" "}
-              {student.name}
-            </div>
-            <div className="text-sm text-gray-500 mb-3">
-              학번 {student.studentNumber}
-              {student.gender ? ` · ${student.gender}` : ""}
+          <div className="mt-4 border border-blue-100 rounded-2xl p-5 bg-gradient-to-br from-blue-50 to-white">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
+                <GraduationCapIcon className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="text-lg font-bold text-slate-900 leading-tight">
+                  {student.grade}학년 {student.classNo}반 {student.numberInClass}번{" "}
+                  {student.name}
+                </div>
+                <div className="text-xs text-slate-500">
+                  학번 {student.studentNumber}
+                  {student.gender ? ` · ${student.gender}` : ""}
+                </div>
+              </div>
             </div>
 
-            <label className="block text-sm font-medium mb-1">지각 시각</label>
+            <label className="block text-sm font-medium mt-4 mb-1.5 text-slate-700">
+              지각 시각
+            </label>
             <input
               type="datetime-local"
               value={occurredAt}
               onChange={(e) => setOccurredAt(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 mb-3"
+              className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 mb-3 outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition bg-white"
             />
 
-            <label className="block text-sm font-medium mb-1">
-              사유 <span className="text-gray-400">(선택)</span>
+            <label className="block text-sm font-medium mb-1.5 text-slate-700">
+              사유 <span className="text-slate-400 font-normal">(선택)</span>
             </label>
             <input
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="예: 늦잠"
-              className="w-full border rounded-md px-3 py-2 mb-4"
+              className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 mb-4 outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition bg-white"
             />
 
             <button
               onClick={handleSave}
               disabled={saving}
-              className="w-full bg-blue-600 text-white rounded-md py-3 font-bold text-lg disabled:opacity-50"
+              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl py-3 font-bold text-lg shadow-md shadow-blue-200 disabled:opacity-50 transition-colors"
             >
               {saving ? "저장 중..." : "지각 기록 저장"}
             </button>
@@ -181,44 +208,57 @@ export default function EntryPage() {
         )}
       </section>
 
-      <section className="bg-white rounded-xl shadow p-5">
-        <h2 className="font-bold text-lg mb-3">최근 기록</h2>
+      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+            <ClockIcon className="w-4.5 h-4.5" />
+          </div>
+          <h2 className="font-bold text-lg text-slate-900">최근 기록</h2>
+        </div>
+
         {recent.length === 0 && (
-          <p className="text-gray-400 text-sm">아직 기록이 없습니다.</p>
+          <div className="flex flex-col items-center gap-2 text-slate-400 py-8">
+            <InboxIcon className="w-8 h-8" />
+            <p className="text-sm">아직 기록이 없습니다.</p>
+          </div>
         )}
-        <ul className="divide-y">
+        <ul className="divide-y divide-slate-100">
           {recent.map((r) => (
-            <li key={r.id} className="py-2 flex items-center justify-between text-sm">
-              <div>
-                <span className="font-medium">
+            <li key={r.id} className="py-3 flex items-center justify-between gap-3 text-sm">
+              <div className="min-w-0">
+                <span className="font-medium text-slate-900">
                   {r.student.grade}학년 {r.student.classNo}반 {r.student.numberInClass}번{" "}
                   {r.student.name}
                 </span>
-                <span className="text-gray-400 ml-2">
-                  {new Date(r.occurredAt).toLocaleString("ko-KR", {
-                    timeZone: "Asia/Seoul",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-                {r.note && <span className="text-gray-400 ml-2">({r.note})</span>}
-                {r.recordedBy && (
-                  <span className="text-gray-300 ml-2">· {r.recordedBy}</span>
-                )}
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5 text-xs text-slate-400">
+                  <span>
+                    {new Date(r.occurredAt).toLocaleString("ko-KR", {
+                      timeZone: "Asia/Seoul",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  {r.note && (
+                    <span className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-md">
+                      {r.note}
+                    </span>
+                  )}
+                  {r.recordedBy && <span>· {r.recordedBy}</span>}
+                </div>
               </div>
               {confirmingId === r.id ? (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1 flex-shrink-0">
                   <button
                     onClick={() => handleDelete(r.id)}
-                    className="text-red-600 font-medium px-2"
+                    className="text-red-600 font-medium px-2 py-1 rounded-md hover:bg-red-50"
                   >
                     정말 삭제
                   </button>
                   <button
                     onClick={() => setConfirmingId(null)}
-                    className="text-gray-400 px-2"
+                    className="text-slate-400 px-2 py-1 rounded-md hover:bg-slate-100"
                   >
                     취소
                   </button>
@@ -226,7 +266,7 @@ export default function EntryPage() {
               ) : (
                 <button
                   onClick={() => handleDelete(r.id)}
-                  className="text-gray-400 hover:text-red-600 px-2"
+                  className="text-slate-300 hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded-md flex-shrink-0 transition-colors"
                 >
                   삭제
                 </button>

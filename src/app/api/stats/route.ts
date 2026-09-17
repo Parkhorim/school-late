@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 import { getDateRange, kstDateParts, Period } from "@/lib/period";
 
 const VALID_PERIODS: Period[] = ["daily", "weekly", "monthly", "semester", "yearly"];
 
 export async function GET(req: NextRequest) {
+  // 대시보드는 로그인 없이 공개되므로, 학생 실명이 담긴 topStudents는
+  // 로그인한 사용자에게만 내려준다 (미로그인 시 null).
+  const isLoggedIn = (await getSession()) !== null;
+
   const periodParam = req.nextUrl.searchParams.get("period") ?? "monthly";
   const period = VALID_PERIODS.includes(periodParam as Period)
     ? (periodParam as Period)
@@ -102,7 +107,7 @@ export async function GET(req: NextRequest) {
     totalCount: records.length,
     byClass,
     byBucket,
-    topStudents,
+    topStudents: isLoggedIn ? topStudents : null,
   });
 }
 
