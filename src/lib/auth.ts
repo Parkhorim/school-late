@@ -9,7 +9,8 @@ function getSecretKey() {
 }
 
 export type SessionPayload = {
-  name: string; // 입력자 성함 (선택 입력, 없으면 빈 문자열)
+  teacherId: number;
+  name: string; // 선생님 성함
 };
 
 export async function createSessionToken(payload: SessionPayload) {
@@ -25,7 +26,11 @@ export async function verifySessionToken(
 ): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getSecretKey());
-    return { name: typeof payload.name === "string" ? payload.name : "" };
+    if (typeof payload.teacherId !== "number") return null;
+    return {
+      teacherId: payload.teacherId,
+      name: typeof payload.name === "string" ? payload.name : "",
+    };
   } catch {
     return null;
   }

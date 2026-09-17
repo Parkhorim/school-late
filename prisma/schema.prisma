@@ -9,6 +9,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model Teacher {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique // 아이디
+  name         String // 성명
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model Student {
   id            Int      @id @default(autoincrement())
   studentNumber Int      @unique // 학번 (예: 2101 = 2학년 1반 1번)

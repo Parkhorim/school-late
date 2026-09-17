@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/session";
 
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json(
+      { error: "기록 삭제는 교사 로그인 후에만 가능합니다." },
+      { status: 403 }
+    );
+  }
+
   const { id } = await params;
   const recordId = Number(id);
   if (!Number.isInteger(recordId)) {

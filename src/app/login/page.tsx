@@ -7,8 +7,8 @@ import { ClockIcon, LockIcon } from "@/components/icons";
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
@@ -21,7 +21,7 @@ function LoginForm() {
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password, name }),
+        body: JSON.stringify({ username, password }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -57,8 +57,24 @@ function LoginForm() {
           </div>
           <h1 className="text-xl font-bold text-slate-900">문태고 지각기록 시스템</h1>
           <p className="text-sm text-slate-500">
-            학생부 공용 비밀번호를 입력해 주세요.
+            선생님 계정으로 로그인해 주세요.
           </p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1.5 text-slate-700">
+            아이디
+          </label>
+          <input
+            type="text"
+            autoFocus
+            autoCapitalize="off"
+            autoCorrect="off"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-base outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
+            required
+          />
         </div>
 
         <div>
@@ -67,24 +83,10 @@ function LoginForm() {
           </label>
           <input
             type="password"
-            autoFocus
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-base outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
             required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1.5 text-slate-700">
-            입력자 성함 <span className="text-slate-400 font-normal">(선택)</span>
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="예: 홍길동"
-            className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-base outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition"
           />
         </div>
 
@@ -99,7 +101,7 @@ function LoginForm() {
           disabled={loading}
           className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl py-2.5 font-medium shadow-md shadow-blue-200 disabled:opacity-50 transition-colors"
         >
-          {loading ? "확인 중..." : "입장하기"}
+          {loading ? "확인 중..." : "로그인"}
         </button>
 
         <p className="flex items-center justify-center gap-1.5 text-xs text-slate-400 pt-1">

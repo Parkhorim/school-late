@@ -3,7 +3,13 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 
 // 대시보드(반별·기간별 통계)는 로그인 없이 공개된다. 단, 학생 실명이 담긴
 // topStudents 목록은 /api/stats 라우트에서 로그인 세션이 없으면 아예 내려주지 않는다.
-const PUBLIC_PATHS = ["/login", "/api/login", "/dashboard", "/api/stats"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/api/login",
+  "/dashboard",
+  "/api/stats",
+  "/api/dashboard-pin/verify",
+];
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
