@@ -23,37 +23,39 @@ export default function NavBar() {
 
   return (
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-10">
-      <nav className="mx-auto max-w-4xl flex items-center gap-1 px-4 py-2.5 overflow-x-auto">
-        <span className="flex items-center gap-2 font-bold text-blue-700 mr-3 whitespace-nowrap">
+      <div className="mx-auto max-w-4xl px-4 pt-2.5 flex items-center justify-between gap-3">
+        <span className="flex items-center gap-2 font-bold text-blue-700 min-w-0">
           <img
             src="/logo.png"
             alt=""
-            className="w-6 h-6 rounded-full object-contain"
+            className="w-6 h-6 rounded-full object-contain flex-shrink-0"
             onError={(e) => {
               e.currentTarget.style.display = "none";
             }}
           />
-          문태고 지각기록 시스템
+          <span className="truncate">문태고 지각기록 시스템</span>
         </span>
+        <button
+          onClick={handleLogout}
+          className="px-3 py-1.5 rounded-full text-sm text-slate-400 hover:bg-slate-100 hover:text-slate-600 whitespace-nowrap transition-colors flex-shrink-0"
+        >
+          로그아웃
+        </button>
+      </div>
+      <nav className="mx-auto max-w-4xl px-4 py-2.5 flex items-center gap-2 overflow-x-auto">
         {links.map((l) => (
           <Link
             key={l.href}
             href={l.href}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap border transition-colors ${
               pathname === l.href
-                ? "bg-blue-600 text-white shadow-sm shadow-blue-200"
-                : "text-slate-600 hover:bg-slate-100"
+                ? "bg-blue-600 border-blue-600 text-white shadow-sm shadow-blue-200"
+                : "bg-white border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
             }`}
           >
             {l.label}
           </Link>
         ))}
-        <button
-          onClick={handleLogout}
-          className="ml-auto px-3 py-1.5 rounded-full text-sm text-slate-400 hover:bg-slate-100 hover:text-slate-600 whitespace-nowrap transition-colors"
-        >
-          로그아웃
-        </button>
       </nav>
     </header>
   );
