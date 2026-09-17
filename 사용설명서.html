@@ -1,0 +1,489 @@
+<title>지각 기록 사용설명서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F3F6FB;
+    --surface: #FFFFFF;
+    --surface-alt: #EAF0FC;
+    --text: #171B24;
+    --text-muted: #5B6472;
+    --border: #DEE3EE;
+    --accent: #2557D6;
+    --accent-ink: #163B8F;
+    --accent-soft: #E4ECFE;
+    --good: #157F3C;
+    --good-soft: #E5F6EA;
+    --warn: #9A5B0A;
+    --warn-soft: #FBF0DE;
+    --danger: #B42318;
+    --danger-soft: #FBEAE9;
+    --shadow: 0 1px 2px rgba(23,27,36,.04), 0 8px 24px -12px rgba(23,27,36,.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0E121C;
+      --surface: #171C29;
+      --surface-alt: #1E2740;
+      --text: #E8ECF5;
+      --text-muted: #99A2B6;
+      --border: #2B3349;
+      --accent: #7C9CFF;
+      --accent-ink: #DCE6FF;
+      --accent-soft: #202A49;
+      --good: #4ADE80;
+      --good-soft: #163223;
+      --warn: #F0B429;
+      --warn-soft: #332506;
+      --danger: #F87171;
+      --danger-soft: #331616;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E121C;
+    --surface: #171C29;
+    --surface-alt: #1E2740;
+    --text: #E8ECF5;
+    --text-muted: #99A2B6;
+    --border: #2B3349;
+    --accent: #7C9CFF;
+    --accent-ink: #DCE6FF;
+    --accent-soft: #202A49;
+    --good: #4ADE80;
+    --good-soft: #163223;
+    --warn: #F0B429;
+    --warn-soft: #332506;
+    --danger: #F87171;
+    --danger-soft: #331616;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    line-height: 1.65;
+    padding-inline: 20px;
+    padding-block: 28px 64px;
+  }
+  main { max-width: 760px; margin-inline: auto; }
+  h1, h2, h3 {
+    font-family: "Noto Serif KR", "Malgun Gothic", serif;
+    text-wrap: balance;
+    color: var(--text);
+    margin: 0;
+  }
+  a { color: var(--accent); }
+  code, .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  /* ---------- Header ---------- */
+  .cover {
+    background: linear-gradient(155deg, var(--accent-soft), transparent 60%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    margin-bottom: 20px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--accent-ink);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .cover h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .cover p.lead { color: var(--text-muted); font-size: 15px; max-width: 52ch; margin: 0; }
+
+  .quickbox {
+    margin-top: 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 520px) { .quickbox { grid-template-columns: 1fr; } }
+  .quickbox .item .label { font-size: 11.5px; color: var(--text-muted); letter-spacing: .04em; margin-bottom: 3px; }
+  .quickbox .item .value { font-weight: 600; font-size: 15px; word-break: break-all; }
+  .quickbox .item .value.fill {
+    color: var(--text-muted); font-weight: 500; border-bottom: 1px dashed var(--border); display: inline-block; padding-bottom: 2px;
+  }
+
+  /* ---------- Nav ---------- */
+  nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0 36px;
+  }
+  nav.toc a {
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    border-radius: 999px;
+  }
+  nav.toc a:hover { border-color: var(--accent); color: var(--accent-ink); }
+
+  /* ---------- Sections ---------- */
+  section { margin-bottom: 44px; scroll-margin-top: 16px; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .sec-num {
+    font-family: "Noto Serif KR", serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sec-head h2 { font-size: 21px; font-weight: 600; }
+  section > p.desc { color: var(--text-muted); margin: 0 0 18px; max-width: 60ch; }
+
+  .steps { list-style: none; margin: 0 0 18px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px;
+  }
+  .steps li .n {
+    font-weight: 700; color: var(--accent-ink); background: var(--accent-soft);
+    width: 22px; height: 22px; border-radius: 6px; font-size: 12.5px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .steps li .t { font-size: 14.5px; }
+  .steps li .t b { font-weight: 600; }
+
+  /* ---------- App mockup shell ---------- */
+  .app-mock {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 18px;
+    margin: 4px 0 18px;
+  }
+  .app-mock .mock-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-muted);
+    margin-bottom: 12px; text-transform: uppercase;
+  }
+  .m-field { margin-bottom: 10px; }
+  .m-field .m-caption { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .m-input {
+    border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px;
+    font-size: 14px; color: var(--text); background: var(--bg);
+  }
+  .m-row { display: flex; gap: 8px; }
+  .m-row .m-input { flex: 1; }
+  .m-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 16px; font-size: 14px; font-weight: 600; white-space: nowrap;
+  }
+  .m-btn.secondary { background: var(--surface-alt); color: var(--accent-ink); }
+  .m-btn.ghost { background: transparent; color: var(--text-muted); padding: 4px 8px; font-weight: 500; }
+  .m-btn.danger-ghost { background: transparent; color: var(--danger); padding: 4px 8px; font-weight: 600; }
+  .m-panel {
+    background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; margin-top: 12px;
+  }
+  .m-panel .name { font-weight: 700; font-size: 15px; }
+  .m-panel .sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+  .m-success {
+    background: var(--good-soft); color: var(--good); border-radius: 8px;
+    padding: 9px 12px; font-size: 13px; font-weight: 600; margin-top: 10px;
+  }
+  .m-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .m-list li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 2px; border-bottom: 1px solid var(--border); font-size: 13.5px;
+  }
+  .m-list li:last-child { border-bottom: none; }
+  .m-list .meta { color: var(--text-muted); font-size: 12px; margin-left: 6px; }
+  .m-confirm { display: flex; gap: 6px; align-items: center; }
+
+  .m-pillrow { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .m-pill {
+    font-size: 12.5px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+    background: var(--surface-alt); color: var(--text-muted);
+  }
+  .m-pill.active { background: var(--accent); color: #fff; }
+  .m-total { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+  .m-total .num { font-size: 30px; font-weight: 700; font-family: "Noto Serif KR", serif; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+  .m-total .unit { color: var(--text-muted); font-size: 13px; }
+  .m-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-bottom: 6px; }
+  .m-chart .bar { flex: 1; background: var(--accent); border-radius: 4px 4px 0 0; opacity: .85; }
+  .m-chart-labels { display: flex; gap: 6px; }
+  .m-chart-labels span { flex: 1; text-align: center; font-size: 10px; color: var(--text-muted); }
+  .m-toprow { display: flex; align-items: center; justify-content: space-between; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .m-toprow:last-child { border-bottom: none; }
+  .m-toprow .rank { color: var(--text-muted); width: 16px; margin-right: 8px; display: inline-block; }
+  .m-toprow .count { font-weight: 700; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Callouts ---------- */
+  .callout {
+    border-radius: 12px; padding: 13px 15px; font-size: 14px; margin: 14px 0;
+    border: 1px solid var(--border); display: flex; gap: 10px;
+  }
+  .callout .ico { flex-shrink: 0; font-size: 15px; line-height: 1.5; }
+  .callout.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+  .callout.warn .ico, .callout.warn b { color: var(--warn); }
+  .callout.info { background: var(--surface-alt); border-color: var(--border); }
+  .callout.info .ico, .callout.info b { color: var(--accent-ink); }
+
+  /* ---------- FAQ ---------- */
+  .faq { display: flex; flex-direction: column; gap: 10px; }
+  .faq .qa {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+  }
+  .faq .q { font-weight: 700; font-size: 14.5px; margin-bottom: 6px; display: flex; gap: 8px; }
+  .faq .q .qmark {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-soft);
+    color: var(--accent-ink); font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800;
+  }
+  .faq .a { font-size: 13.5px; color: var(--text-muted); padding-left: 28px; }
+
+  footer {
+    margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border);
+    font-size: 12.5px; color: var(--text-muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    nav.toc, .quickbox .value.fill { display: none; }
+    .app-mock { box-shadow: none; }
+    section { break-inside: avoid; }
+  }
+</style>
+
+<main>
+
+  <div class="cover">
+    <span class="eyebrow">📘 학생부 공용 안내</span>
+    <h1>지각 기록 시스템 사용설명서</h1>
+    <p class="lead">학번만 입력하면 이름이 뜨고, 시각을 기록하면 반별·기간별 통계가 자동으로 쌓입니다. 여러 선생님이 동시에 쓰셔도 각자 기록이 안전하게 저장됩니다.</p>
+
+    <div class="quickbox">
+      <div class="item">
+        <div class="label">접속 주소</div>
+        <div class="value"><a href="https://jigak-app.vercel.app" target="_blank" rel="noopener">jigak-app.vercel.app</a></div>
+      </div>
+      <div class="item">
+        <div class="label">공용 비밀번호</div>
+        <div class="value fill">학생부에 문의</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <a href="#start">① 시작하기</a>
+    <a href="#record">② 지각 기록하기</a>
+    <a href="#manage">③ 기록 확인·정정</a>
+    <a href="#dashboard">④ 통계 보기</a>
+    <a href="#roster">⑤ 명단 관리</a>
+    <a href="#faq">자주 묻는 질문</a>
+  </nav>
+
+  <section id="start">
+    <div class="sec-head"><span class="sec-num">1</span><h2>시작하기</h2></div>
+    <p class="desc">주소로 들어가서 공용 비밀번호만 입력하면 됩니다. 계정을 따로 만들 필요는 없습니다.</p>
+
+    <ol class="steps">
+      <li><span class="n">1</span><span class="t">위 접속 주소로 이동합니다.</span></li>
+      <li><span class="n">2</span><span class="t"><b>비밀번호</b>에 학생부 공용 비밀번호를 입력합니다.</span></li>
+      <li><span class="n">3</span><span class="t"><b>입력자 성함</b>은 선택 사항이지만, 나중에 누가 기록했는지 구분하고 싶다면 적어 주세요. 최근 기록 목록에 이름이 함께 표시됩니다.</span></li>
+      <li><span class="n">4</span><span class="t"><b>입장하기</b>를 누르면 로그인이 30일간 유지됩니다 — 매번 다시 입력할 필요 없습니다.</span></li>
+    </ol>
+
+    <div class="app-mock">
+      <div class="mock-label">로그인 화면</div>
+      <div class="m-field">
+        <div class="m-caption">비밀번호</div>
+        <div class="m-input">••••••••••</div>
+      </div>
+      <div class="m-field">
+        <div class="m-caption">입력자 성함 (선택)</div>
+        <div class="m-input" style="color:var(--text-muted)">예: 홍길동</div>
+      </div>
+      <div class="m-btn" style="width:100%; text-align:center;">입장하기</div>
+    </div>
+
+    <div class="callout info">
+      <span class="ico">🔒</span>
+      <span>학생 개인정보가 표시되는 화면입니다. 자리를 비울 때는 브라우저 탭을 닫거나 상단의 <b>로그아웃</b>을 눌러 주세요.</span>
+    </div>
+  </section>
+
+  <section id="record">
+    <div class="sec-head"><span class="sec-num">2</span><h2>지각 기록하기</h2></div>
+    <p class="desc">가장 자주 쓰게 될 화면입니다. 학번 네 자리만 알면 10초 안에 기록이 끝납니다.</p>
+
+    <ol class="steps">
+      <li><span class="n">1</span><span class="t"><b>학번 입력</b> 칸에 학번을 입력하고 <b>조회</b>를 누릅니다. (예: 2101 → 2학년 1반 1번)</span></li>
+      <li><span class="n">2</span><span class="t">학생 이름·학년·반·번호가 맞는지 확인합니다.</span></li>
+      <li><span class="n">3</span><span class="t"><b>지각 시각</b>은 기본값이 지금 시각이며, 필요하면 직접 바꿀 수 있습니다.</span></li>
+      <li><span class="n">4</span><span class="t"><b>사유</b>는 선택 입력입니다.</span></li>
+      <li><span class="n">5</span><span class="t"><b>지각 기록 저장</b>을 누르면 완료 — 오늘 몇 번째, 이번 학기 몇 번째 지각인지도 바로 알려줍니다.</span></li>
+    </ol>
+
+    <div class="app-mock">
+      <div class="mock-label">지각 입력 화면</div>
+      <div class="m-row">
+        <div class="m-input" style="color:var(--text-muted)">학번 입력 (예: 2101)</div>
+        <div class="m-btn">조회</div>
+      </div>
+      <div class="m-panel">
+        <div class="name">2학년 1반 1번 강우진</div>
+        <div class="sub">학번 2101 · 남</div>
+      </div>
+      <div class="m-field" style="margin-top:12px;">
+        <div class="m-caption">지각 시각</div>
+        <div class="m-input">2026-09-17 08:12</div>
+      </div>
+      <div class="m-field">
+        <div class="m-caption">사유 (선택)</div>
+        <div class="m-input" style="color:var(--text-muted)">예: 늦잠</div>
+      </div>
+      <div class="m-btn" style="width:100%; text-align:center;">지각 기록 저장</div>
+      <div class="m-success">✓ 강우진 학생 지각이 기록되었습니다. (오늘 1번째, 이번 학기 4번째)</div>
+    </div>
+
+    <div class="callout info">
+      <span class="ico">👥</span>
+      <span>여러 선생님이 같은 시간에 서로 다른 학생을 입력해도 서로 덮어쓰지 않습니다. 각 기록은 독립적으로 저장됩니다.</span>
+    </div>
+  </section>
+
+  <section id="manage">
+    <div class="sec-head"><span class="sec-num">3</span><h2>최근 기록 확인·정정</h2></div>
+    <p class="desc">지각 입력 화면 아래쪽에 최근 기록이 항상 떠 있고, 8초마다 자동으로 갱신됩니다. 다른 선생님이 방금 입력한 것도 바로 보입니다.</p>
+
+    <div class="app-mock">
+      <div class="mock-label">최근 기록</div>
+      <ul class="m-list">
+        <li>
+          <span>2학년 1반 1번 강우진 <span class="meta">9. 17. 오전 08:12 · 김선생</span></span>
+          <span class="m-confirm"><span class="m-btn ghost">삭제</span></span>
+        </li>
+        <li>
+          <span>1학년 3반 1번 김도영 <span class="meta">9. 17. 오전 08:09 (늦잠)</span></span>
+          <span class="m-confirm">
+            <span class="m-btn danger-ghost">정말 삭제</span>
+            <span class="m-btn ghost">취소</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <p class="desc" style="margin-top:-6px;">기록을 잘못 입력했다면, 수정 기능 대신 <b>삭제 후 재입력</b>하는 방식입니다. <b>삭제</b>를 누르면 실수 방지를 위해 한 번 더 <b>정말 삭제</b>를 눌러야 실제로 지워집니다.</p>
+  </section>
+
+  <section id="dashboard">
+    <div class="sec-head"><span class="sec-num">4</span><h2>통계 보기 (대시보드)</h2></div>
+    <p class="desc">상단 메뉴의 <b>대시보드</b>에서 반별·기간별 지각 현황을 한눈에 봅니다.</p>
+
+    <ol class="steps">
+      <li><span class="n">1</span><span class="t"><b>일간 / 주간 / 월간 / 학기 / 연간</b> 중 원하는 기간을 고릅니다. 학기는 3~8월(1학기), 9월~익년 2월(2학기)로 자동 구분됩니다.</span></li>
+      <li><span class="n">2</span><span class="t">날짜를 바꾸면 그 날짜가 포함된 기간으로 다시 계산됩니다.</span></li>
+      <li><span class="n">3</span><span class="t">학년 필터로 특정 학년만 따로 볼 수 있습니다.</span></li>
+      <li><span class="n">4</span><span class="t"><b>반별 지각 건수</b> 그래프, <b>기간 추이</b> 그래프, <b>지각 많은 학생 Top 10</b>까지 함께 제공됩니다.</span></li>
+    </ol>
+
+    <div class="app-mock">
+      <div class="mock-label">대시보드 — 월간 · 전체 학년</div>
+      <div class="m-pillrow">
+        <span class="m-pill">일간</span><span class="m-pill">주간</span><span class="m-pill active">월간</span><span class="m-pill">학기</span><span class="m-pill">연간</span>
+      </div>
+      <div class="m-total"><span>2026년 9월</span><span class="num">15</span><span class="unit">건</span></div>
+      <div class="m-chart">
+        <div class="bar" style="height:60%"></div><div class="bar" style="height:22%"></div><div class="bar" style="height:22%"></div>
+        <div class="bar" style="height:22%"></div><div class="bar" style="height:0%"></div><div class="bar" style="height:40%"></div>
+        <div class="bar" style="height:22%"></div><div class="bar" style="height:22%"></div><div class="bar" style="height:22%"></div>
+      </div>
+      <div class="m-chart-labels"><span>1-1</span><span>1-2</span><span>1-3</span><span>1-4</span><span>1-5</span><span>2-1</span><span>2-2</span><span>2-3</span><span>2-4</span></div>
+      <div style="margin-top:14px;">
+        <div class="m-toprow"><span><span class="rank">1</span>1학년 1반 1번 강가람</span><span class="count">2회</span></div>
+        <div class="m-toprow"><span><span class="rank">2</span>2학년 1반 1번 강우진</span><span class="count">2회</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roster">
+    <div class="sec-head"><span class="sec-num">5</span><h2>학생 명단 관리</h2></div>
+    <p class="desc">신학기가 시작되거나 반 편성·전학생이 생겼을 때, 학교 학생 명렬 엑셀 파일을 다시 올리면 학번을 기준으로 자동 반영됩니다.</p>
+
+    <ol class="steps">
+      <li><span class="n">1</span><span class="t">상단 메뉴 <b>학생 명단 관리</b>로 들어갑니다.</span></li>
+      <li><span class="n">2</span><span class="t">학교 학생 명렬 엑셀(.xlsx) 파일을 선택합니다. 전체를 한 번에 올려도 되고, 학년별로 나눠 올려도 됩니다.</span></li>
+      <li><span class="n">3</span><span class="t">업로드가 끝나면 신규/갱신 인원수가 표시됩니다. 이미 있는 학번은 정보만 갱신되고, 새 학번은 새로 추가됩니다.</span></li>
+      <li><span class="n">4</span><span class="t">전학 등으로 없어진 학생은 목록에서 <b>비활성화</b>할 수 있습니다 — 지각 기록은 남지만 새 지각 입력 시 조회되지 않습니다.</span></li>
+    </ol>
+
+    <div class="app-mock">
+      <div class="mock-label">학생 명단 업로드</div>
+      <div class="m-row" style="margin-bottom:10px;">
+        <div class="m-input" style="color:var(--text-muted); flex:1;">2026학년 2학기 학생 명렬.xlsx</div>
+      </div>
+      <div class="m-success">✓ 총 515명 처리 (신규 515명, 갱신 0명)</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="ico">⚠️</span>
+      <span>학번은 <b>학년(1자리)+반(1자리)+번호(2자리)</b> 형식이어야 합니다 (예: 3705 = 3학년 7반 5번). 이 형식을 벗어난 학번은 인식되지 않습니다.</span>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sec-head"><span class="sec-num">?</span><h2>자주 묻는 질문</h2></div>
+
+    <div class="faq">
+      <div class="qa">
+        <div class="q"><span class="qmark">Q</span>공용 비밀번호를 잊어버렸어요.</div>
+        <div class="a">학생부 담당 선생님(또는 이 시스템을 배포한 담당자)에게 문의하세요. 비밀번호는 서버 설정에서 바로 확인·변경할 수 있습니다.</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qmark">Q</span>학번을 입력했는데 "학생을 찾을 수 없습니다"라고 나와요.</div>
+        <div class="a">학번을 잘못 입력했거나, 아직 명단에 없는 학생(신입생·전학생)일 수 있습니다. <b>학생 명단 관리</b>에서 검색해 확인하고, 없다면 최신 명단 엑셀을 다시 업로드해 주세요.</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qmark">Q</span>지각 시각이나 학생을 잘못 입력했어요. 수정할 수 있나요?</div>
+        <div class="a">별도의 수정 기능은 없고, <b>삭제 후 다시 입력</b>하는 방식입니다. 최근 기록 목록에서 삭제 → 정말 삭제를 누른 뒤 새로 기록하세요.</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qmark">Q</span>동시에 여러 명이 입력해도 기록이 꼬이지 않나요?</div>
+        <div class="a">그렇지 않습니다. 각 지각 기록은 독립된 항목으로 저장되며, 같은 학생이라도 여러 건이 각각 남습니다. 최근 기록 목록은 8초마다 자동으로 갱신되어 다른 선생님의 입력도 바로 확인됩니다.</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qmark">Q</span>1학기·2학기 구분은 어떻게 되나요?</div>
+        <div class="a">3월 1일~8월 31일이 1학기, 9월 1일~다음 해 2월 말일이 2학기로 자동 계산됩니다. 별도로 설정할 필요가 없습니다.</div>
+      </div>
+      <div class="qa">
+        <div class="q"><span class="qmark">Q</span>휴대폰으로도 쓸 수 있나요?</div>
+        <div class="a">네. 화면이 휴대폰 크기에 맞게 자동으로 조정되며, 조회·저장·대시보드 확인 모두 휴대폰 브라우저에서 그대로 가능합니다.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>지각 기록 시스템 · 학생부 공용 안내 자료</span>
+    <span>화면 구성은 실제 서비스와 다소 다를 수 있습니다</span>
+  </footer>
+
+</main>
