@@ -11,7 +11,8 @@ export async function proxy(req: NextRequest) {
   if (
     PUBLIC_PATHS.some((p) => pathname === p) ||
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon")
+    pathname.startsWith("/favicon") ||
+    /\.(png|jpe?g|svg|ico|webp|gif)$/i.test(pathname)
   ) {
     return NextResponse.next();
   }

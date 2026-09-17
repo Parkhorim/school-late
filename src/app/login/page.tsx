@@ -11,6 +11,7 @@ function LoginForm() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,10 +43,19 @@ function LoginForm() {
         className="w-full max-w-sm bg-white rounded-2xl shadow-xl shadow-slate-200/70 ring-1 ring-slate-100 p-7 space-y-5"
       >
         <div className="flex flex-col items-center text-center gap-2 mb-1">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-200">
-            <ClockIcon className="w-6 h-6" />
+          <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-200 overflow-hidden">
+            {logoFailed ? (
+              <ClockIcon className="w-7 h-7" />
+            ) : (
+              <img
+                src="/logo.png"
+                alt=""
+                className="w-9 h-9 object-contain"
+                onError={() => setLogoFailed(true)}
+              />
+            )}
           </div>
-          <h1 className="text-xl font-bold text-slate-900">지각 기록 시스템</h1>
+          <h1 className="text-xl font-bold text-slate-900">문태고 지각기록 시스템</h1>
           <p className="text-sm text-slate-500">
             학생부 공용 비밀번호를 입력해 주세요.
           </p>

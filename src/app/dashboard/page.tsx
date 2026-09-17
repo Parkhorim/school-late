@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ChartBarIcon, LockIcon, UsersIcon } from "@/components/icons";
+import { ChartBarIcon, DownloadIcon, LockIcon, UsersIcon } from "@/components/icons";
 
 type Period = "daily" | "weekly" | "monthly" | "semester" | "yearly";
 
@@ -52,17 +52,21 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const queryString = useMemo(() => {
+    const params = new URLSearchParams({ period, date });
+    if (grade !== "all") params.set("grade", grade);
+    return params.toString();
+  }, [period, date, grade]);
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ period, date });
-      if (grade !== "all") params.set("grade", grade);
-      const res = await fetch(`/api/stats?${params.toString()}`);
+      const res = await fetch(`/api/stats?${queryString}`);
       if (res.ok) setStats(await res.json());
     } finally {
       setLoading(false);
     }
-  }, [period, date, grade]);
+  }, [queryString]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- 기간/학년 필터가 바뀔 때마다 통계를 다시 불러옴
@@ -133,6 +137,16 @@ export default function DashboardPage() {
           </span>
           <span className="text-slate-400 text-sm">건</span>
           {loading && <span className="text-xs text-slate-400">불러오는 중...</span>}
+
+          {stats?.topStudents !== null && (
+            <a
+              href={`/api/stats/export?${queryString}`}
+              className="ml-auto flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors"
+            >
+              <DownloadIcon className="w-4 h-4" />
+              엑셀 다운로드
+            </a>
+          )}
         </div>
       </section>
 
