@@ -9,6 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // 마이그레이션은 세션 단위 연결이 필요해 Supabase 등의 트랜잭션 풀러(pgbouncer)와
+    // 호환되지 않는다. DIRECT_URL(직접 연결)이 있으면 그것을, 없으면 DATABASE_URL을 사용.
+    url: process.env["DIRECT_URL"] ?? process.env["DATABASE_URL"],
   },
 });
